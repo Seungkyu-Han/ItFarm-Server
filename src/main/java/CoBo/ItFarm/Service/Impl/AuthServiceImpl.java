@@ -1,6 +1,6 @@
 package CoBo.ItFarm.Service.Impl;
 
-import CoBo.ItFarm.Data.Dto.Auth.AuthLoginRes;
+import CoBo.ItFarm.Data.Dto.Auth.Res.AuthLoginRes;
 import CoBo.ItFarm.Repository.UserRepository;
 import CoBo.ItFarm.Service.AuthService;
 import com.google.gson.JsonElement;

@@ -1,6 +1,6 @@
 package CoBo.ItFarm.Controller;
 
-import CoBo.ItFarm.Data.Dto.Auth.AuthLoginRes;
+import CoBo.ItFarm.Data.Dto.Auth.Res.AuthLoginRes;
 import CoBo.ItFarm.Service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

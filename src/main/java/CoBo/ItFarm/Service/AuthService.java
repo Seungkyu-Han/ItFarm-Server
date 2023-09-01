@@ -1,6 +1,6 @@
 package CoBo.ItFarm.Service;
 
-import CoBo.ItFarm.Data.Dto.Auth.AuthLoginRes;
+import CoBo.ItFarm.Data.Dto.Auth.Res.AuthLoginRes;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;

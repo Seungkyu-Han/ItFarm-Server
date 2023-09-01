@@ -1,4 +1,4 @@
-package CoBo.ItFarm.Data.Dto.Auth;
+package CoBo.ItFarm.Data.Dto.Auth.Res;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
