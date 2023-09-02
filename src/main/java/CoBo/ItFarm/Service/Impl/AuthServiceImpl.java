@@ -1,6 +1,10 @@
 package CoBo.ItFarm.Service.Impl;
 
+import CoBo.ItFarm.Config.Jwt.JwtTokenProvider;
+import CoBo.ItFarm.Data.Dto.Auth.Req.AuthPatchLoginReq;
+import CoBo.ItFarm.Data.Dto.Auth.Res.AuthCheckRes;
 import CoBo.ItFarm.Data.Dto.Auth.Res.AuthLoginRes;
+import CoBo.ItFarm.Data.Entity.UserEntity;
 import CoBo.ItFarm.Repository.UserRepository;
 import CoBo.ItFarm.Service.AuthService;
 import com.google.gson.JsonElement;
@@ -8,12 +12,15 @@ import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,14 +32,41 @@ public class AuthServiceImpl implements AuthService {
     @Value("${kakao.auth.redirect_uri}")
     private String redirect_uri;
     private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
 
     @Override
     public ResponseEntity<AuthLoginRes> login(String code) throws IOException{
 
-        Integer userId = getKakaoUserIdByKakaoAccessToken(getKakaoAccessToken(code));
+        Optional<UserEntity> optionalUserEntity
+                = userRepository.findById(getKakaoUserIdByKakaoAccessToken(getKakaoAccessToken(code)));
 
-        return null;
+        if(optionalUserEntity.isEmpty())
+            throw new NullPointerException();
+
+        UserEntity userEntity = optionalUserEntity.get();
+
+        String accessToken = jwtTokenProvider.createAccessToken(userEntity.getId());
+        String refreshToken = jwtTokenProvider.createRefreshToken(userEntity.getId());
+
+        userEntity.setRefreshToken(refreshToken);
+
+        userRepository.save(userEntity);
+
+        return new ResponseEntity<>(new AuthLoginRes(accessToken, refreshToken), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<AuthLoginRes> login(AuthPatchLoginReq authPatchLoginReq) {
+        UserEntity userEntity = userRepository.findByRefreshToken(authPatchLoginReq.getRefreshToken());
+        return new ResponseEntity<>(new AuthLoginRes(jwtTokenProvider.createAccessToken(userEntity.getId()),authPatchLoginReq.getRefreshToken()), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<AuthCheckRes> check(Authentication authentication) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(Integer.valueOf(authentication.getName()));
+        if(optionalUserEntity.isEmpty()) throw new NullPointerException();
+        return new ResponseEntity<>(new AuthCheckRes(optionalUserEntity.get()), HttpStatus.OK);
     }
 
     private Integer getKakaoUserIdByKakaoAccessToken(String kakaoAccessToken) throws IOException {

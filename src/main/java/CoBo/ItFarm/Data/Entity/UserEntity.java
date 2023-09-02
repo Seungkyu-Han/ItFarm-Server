@@ -19,4 +19,6 @@ public class UserEntity {
 
     @Enumerated(EnumType.ORDINAL)
     private RoleEnum role;
+
+    private String refreshToken;
 }
