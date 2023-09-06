@@ -8,8 +8,11 @@ import lombok.Data;
 public class MeasurementEntity {
 
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "time", referencedColumnName = "time")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "time")
     private TimeEntity time;
 
     private Float ph;
