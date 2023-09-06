@@ -20,7 +20,7 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    private final String[] allowedUrls = {"/api/auth/login**", "/swagger-ui/**", "/v3/**"};
+    private final String[] allowedUrls = {"/api/auth/login**", "/swagger-ui/**", "/v3/**", "/api/test/test**"};
 
     @Bean
     public PasswordEncoder passwordEncoder() {return new BCryptPasswordEncoder();}
