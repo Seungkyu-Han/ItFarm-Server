@@ -2,11 +2,12 @@ package CoBo.ItFarm.Data.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity(name = "level")
 @Data
-@IdClass(TimeEntity.class)
+@NoArgsConstructor
 public class LevelEntity {
 
     @Id
@@ -17,7 +18,13 @@ public class LevelEntity {
     @JoinColumn(name = "time")
     private TimeEntity time;
 
-    private Double first;
+    private Float first;
 
-    private Double second;
+    private Float second;
+
+    public LevelEntity(TimeEntity time, Float first, Float second){
+        this.time = time;
+        this.first = first;
+        this.second = second;
+    }
 }
