@@ -1,6 +1,7 @@
 package CoBo.ItFarm.Controller;
 
 import CoBo.ItFarm.Data.Dto.Auth.Res.AuthCheckRes;
+import CoBo.ItFarm.Data.Enum.WarningCategoryEnum;
 import CoBo.ItFarm.Service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -58,6 +59,8 @@ public class DeviceController {
             @Parameter(name = "time", description = "시간", example = "2023-09-07 17:10:06.728144"),
             @Parameter(name = "prediction_water_temperature", description = "예측 수온", example = "11.1"),
             @Parameter(name = "prediction_field_temperature", description = "예측 필드 온도", example = "21.1"),
+            @Parameter(name = "prediction_ph", description = "예측 ph", example = "7.7"),
+            @Parameter(name = "prediction_ec", description = "예측 ec", example = "12.4"),
             @Parameter(name = "prediction_time", description = "예측 시간", example = "2023-09-07 18:10:06.728144")
     })
     @ApiResponses({
@@ -81,5 +84,20 @@ public class DeviceController {
                 prediction_water_temperature, prediction_field_temperature, prediction_ph, prediction_ec, prediction_time);
     }
 
-
+    @GetMapping("/report")
+    @Operation(
+            summary = "경보를 전송하는 API",
+            description = "WarningCategory를 참조해서 파라미터 전송(Notion 참고)"
+    )
+    @Parameters({
+            @Parameter(name = "warningCategoryEnum", description = "경보 카테고리", example = "WATER_LEVEL_TOO_HIGH"),
+            @Parameter(name = "time", description = "경보 발생 시간")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    public ResponseEntity<HttpStatus> report(
+            @RequestParam WarningCategoryEnum warningCategoryEnum, @RequestParam Timestamp time){
+        return deviceService.report(warningCategoryEnum, time);
+    }
 }

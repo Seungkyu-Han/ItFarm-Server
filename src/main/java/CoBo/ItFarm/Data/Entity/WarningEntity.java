@@ -3,9 +3,11 @@ package CoBo.ItFarm.Data.Entity;
 import CoBo.ItFarm.Data.Enum.WarningCategoryEnum;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "warning")
 @Data
+@NoArgsConstructor
 public class WarningEntity {
 
     @Id
@@ -18,4 +20,9 @@ public class WarningEntity {
 
     @Enumerated(EnumType.ORDINAL)
     private WarningCategoryEnum category;
+
+    public WarningEntity(TimeEntity time, WarningCategoryEnum warningCategoryEnum){
+        this.time = time;
+        this.category = warningCategoryEnum;
+    }
 }

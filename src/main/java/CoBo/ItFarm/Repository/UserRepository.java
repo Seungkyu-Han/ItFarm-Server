@@ -12,6 +12,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     UserEntity findByRefreshToken(String refreshToken);
 
-    @Query("SELECT u.email FROM user u")
-    List<String> getEmailList();
+    @Query("SELECT u.email FROM user u " +
+            "WHERE u.warningEmail = :warningEmail")
+    List<String> getWarningEmailList(Boolean warningEmail);
 }

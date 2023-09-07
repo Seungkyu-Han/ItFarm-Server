@@ -1,11 +1,10 @@
 package CoBo.ItFarm.Service.Impl;
 
-import CoBo.ItFarm.Data.Entity.LevelEntity;
-import CoBo.ItFarm.Data.Entity.MeasurementEntity;
-import CoBo.ItFarm.Data.Entity.PredictionEntity;
-import CoBo.ItFarm.Data.Entity.TimeEntity;
+import CoBo.ItFarm.Data.Entity.*;
+import CoBo.ItFarm.Data.Enum.WarningCategoryEnum;
 import CoBo.ItFarm.Repository.*;
 import CoBo.ItFarm.Service.DeviceService;
+import CoBo.ItFarm.Service.Util.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,6 +24,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final PredictionRepository predictionRepository;
     private final TimeRepository timeRepository;
     private final WarningRepository warningRepository;
+    private final EmailService emailService;
 
     @Override
     public ResponseEntity<HttpStatus> data10Sec(Timestamp time, Float first, Float second) {
@@ -66,6 +66,15 @@ public class DeviceServiceImpl implements DeviceService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<HttpStatus> report(WarningCategoryEnum warningCategoryEnum, Timestamp time) {
+        WarningEntity warningEntity = new WarningEntity(getTimeEntity(time), warningCategoryEnum);
+        warningRepository.save(warningEntity);
+        if(warningCategoryEnum.isSendMail())
+            emailService.sendWarningEmail(warningCategoryEnum.name());
+
+        return null;
+    }
 
     private TimeEntity getTimeEntity(Timestamp time){
         Optional<TimeEntity> optionalTimeEntity = timeRepository.findByTime(time);
