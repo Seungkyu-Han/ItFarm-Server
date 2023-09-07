@@ -100,7 +100,7 @@ public class DeviceController {
     )
     @Parameters({
             @Parameter(name = "warningCategoryEnum", description = "경보 카테고리", example = "WATER_LEVEL_TOO_HIGH"),
-            @Parameter(name = "time", description = "경보 발생 시간")
+            @Parameter(name = "time", description = "경보 발생 시간", example = "2023-09-07 18:10:06.728144")
     })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공")
