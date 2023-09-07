@@ -21,4 +21,8 @@ public class UserEntity {
     private RoleEnum role;
 
     private String refreshToken;
+
+    private boolean warningEmail = Boolean.TRUE;
+
+    private boolean reportEmail = Boolean.TRUE;
 }
