@@ -13,6 +13,7 @@ public class WarningEntity {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "time")
     private TimeEntity time;
 
     @Enumerated(EnumType.ORDINAL)
