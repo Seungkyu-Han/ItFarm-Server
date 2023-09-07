@@ -18,7 +18,8 @@ public class WarningEntity {
     @JoinColumn(name = "time")
     private TimeEntity time;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 30)
     private WarningCategoryEnum category;
 
     public WarningEntity(TimeEntity time, WarningCategoryEnum warningCategoryEnum){

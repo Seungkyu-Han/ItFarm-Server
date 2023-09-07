@@ -40,28 +40,24 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public ResponseEntity<HttpStatus> data1Hour(
             Float field_temperature,
-            Float field_humidity,
+            Float humidity,
             Float water_temperature,
             Float ph,
             Float ec,
-            Timestamp time,
-            Float prediction_water_temperature,
-            Float prediction_field_temperature,
-            Float prediction_ph,
-            Float prediction_ec,
-            Timestamp prediction_time) {
+            Timestamp time) {
 
-        TimeEntity currentTime = getTimeEntity(time);
-        TimeEntity predictionTime = getTimeEntity(prediction_time);
+        TimeEntity timeEntity = getTimeEntity(time);
 
-        MeasurementEntity measurementEntity = new MeasurementEntity(currentTime, ph, ec, water_temperature, field_temperature);
+        MeasurementEntity measurementEntity = MeasurementEntity.builder()
+                .field_temperature(field_temperature)
+                .humidity(humidity)
+                .water_temperature(water_temperature)
+                .ph(ph)
+                .ec(ec)
+                .time(timeEntity)
+                .build();
 
         measurementRepository.save(measurementEntity);
-
-        PredictionEntity predictionEntity = new PredictionEntity(predictionTime, prediction_ph, prediction_ec,
-                prediction_water_temperature, prediction_field_temperature);
-
-        predictionRepository.save(predictionEntity);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -74,6 +70,29 @@ public class DeviceServiceImpl implements DeviceService {
             emailService.sendWarningEmail(warningCategoryEnum.name());
 
         return null;
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> predict(
+            Float prediction_ph,
+            Float prediction_ec,
+            Float prediction_water_temperature,
+            Float prediction_field_temperature,
+            Timestamp prediction_time) {
+
+        TimeEntity timeEntity = getTimeEntity(prediction_time);
+
+        PredictionEntity predictionEntity = PredictionEntity.builder()
+                .ph(prediction_ph)
+                .ec(prediction_ec)
+                .water_temperature(prediction_water_temperature)
+                .field_temperature(prediction_field_temperature)
+                .time(timeEntity)
+                .build();
+
+        predictionRepository.save(predictionEntity);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private TimeEntity getTimeEntity(Timestamp time){
