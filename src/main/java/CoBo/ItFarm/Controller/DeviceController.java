@@ -3,6 +3,8 @@ package CoBo.ItFarm.Controller;
 import CoBo.ItFarm.Data.Dto.Auth.Res.AuthCheckRes;
 import CoBo.ItFarm.Service.DeviceService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,7 +33,7 @@ public class DeviceController {
     @GetMapping("/10sec")
     @Operation(
             summary = "10초 마다 전송하는 데이터 API",
-            description = "수위컨테이너와 시간 전")
+            description = "컨테이너 수위 그리고 시간")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공",
                     content = @Content(schema = @Schema(implementation = AuthCheckRes.class)))
@@ -42,4 +44,42 @@ public class DeviceController {
             @RequestParam Float second){
         return deviceService.data10Sec(time, first, second);
     }
+
+    @GetMapping("/1hour")
+    @Operation(
+            summary = "1시간 마다 전송하는 데이터 API",
+            description = "필드 온도, 필드 습도, 수온, PH, EC, 예측 수온, 예측 필드 온도, 예측 시간 그리고 시간")
+    @Parameters({
+            @Parameter(name = "field_temperature", description = "필드 온도", example = "20.1"),
+            @Parameter(name = "field_humidity", description = "필드 습도", example = "71"),
+            @Parameter(name = "water_temperature", description = "수온", example = "10.1"),
+            @Parameter(name = "ph", description = "ph", example = "5.5"),
+            @Parameter(name = "ec", description = "전기전도도", example = "12"),
+            @Parameter(name = "time", description = "시간", example = "2023-09-07 17:10:06.728144"),
+            @Parameter(name = "prediction_water_temperature", description = "예측 수온", example = "11.1"),
+            @Parameter(name = "prediction_field_temperature", description = "예측 필드 온도", example = "21.1"),
+            @Parameter(name = "prediction_time", description = "예측 시간", example = "2023-09-07 18:10:06.728144")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = @Content(schema = @Schema(implementation = AuthCheckRes.class)))
+    })
+    public ResponseEntity<HttpStatus> Data1Hour(
+            @RequestParam Float field_temperature,
+            @RequestParam Float field_humidity,
+            @RequestParam Float water_temperature,
+            @RequestParam Float ph,
+            @RequestParam Float ec,
+            @RequestParam Timestamp time,
+            @RequestParam Float prediction_water_temperature,
+            @RequestParam Float prediction_field_temperature,
+            @RequestParam Float prediction_ph,
+            @RequestParam Float prediction_ec,
+            @RequestParam Timestamp prediction_time
+    ){
+        return deviceService.data1Hour(field_temperature, field_humidity, water_temperature, ph, ec, time,
+                prediction_water_temperature, prediction_field_temperature, prediction_ph, prediction_ec, prediction_time);
+    }
+
+
 }

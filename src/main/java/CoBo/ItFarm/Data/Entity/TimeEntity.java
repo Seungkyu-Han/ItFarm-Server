@@ -18,7 +18,6 @@ public class TimeEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Timestamp time;
 
     public TimeEntity(Timestamp time){
