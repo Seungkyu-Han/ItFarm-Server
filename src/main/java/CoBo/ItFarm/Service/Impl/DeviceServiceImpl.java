@@ -1,5 +1,6 @@
 package CoBo.ItFarm.Service.Impl;
 
+import CoBo.ItFarm.Data.Dto.Device.Res.DeviceLevelRes;
 import CoBo.ItFarm.Data.Entity.*;
 import CoBo.ItFarm.Data.Enum.WarningCategoryEnum;
 import CoBo.ItFarm.Repository.*;
@@ -7,8 +8,10 @@ import CoBo.ItFarm.Service.DeviceService;
 import CoBo.ItFarm.Service.Util.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -25,20 +28,24 @@ public class DeviceServiceImpl implements DeviceService {
     private final TimeRepository timeRepository;
     private final WarningRepository warningRepository;
     private final EmailService emailService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public ResponseEntity<HttpStatus> data10Sec(Timestamp time, Float first, Float second) {
+    @Async
+    public ResponseEntity<HttpStatus> level(Timestamp time, Float first, Float second) {
 
         TimeEntity timeEntity = getTimeEntity(time);
 
         LevelEntity levelEntity = new LevelEntity(timeEntity, first, second);
         levelRepository.save(levelEntity);
 
+        applicationEventPublisher.publishEvent(new DeviceLevelRes(levelEntity));
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<HttpStatus> data1Hour(
+    public ResponseEntity<HttpStatus> measurement(
             Float field_temperature,
             Float humidity,
             Float water_temperature,

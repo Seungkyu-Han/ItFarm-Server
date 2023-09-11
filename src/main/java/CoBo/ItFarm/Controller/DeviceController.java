@@ -28,7 +28,7 @@ public class DeviceController {
 
     private final DeviceService deviceService;
 
-    @GetMapping("/10sec")
+    @GetMapping("/level")
     @Operation(
             summary = "10초 마다 전송하는 데이터 API",
             description = "컨테이너 수위 그리고 시간")
@@ -39,10 +39,10 @@ public class DeviceController {
             @RequestParam Timestamp time,
             @RequestParam Float first,
             @RequestParam Float second){
-        return deviceService.data10Sec(time, first, second);
+        return deviceService.level(time, first, second);
     }
 
-    @GetMapping("/1hour")
+    @GetMapping("/measurement")
     @Operation(
             summary = "1시간 마다 전송하는 데이터 API",
             description = "필드 온도, 필드 습도, 수온, PH, EC 그리고 시간")
@@ -65,7 +65,7 @@ public class DeviceController {
             @RequestParam Float ec,
             @RequestParam Timestamp time
     ){
-        return deviceService.data1Hour(field_temperature, humidity, water_temperature, ph, ec, time);
+        return deviceService.measurement(field_temperature, humidity, water_temperature, ph, ec, time);
     }
 
     @GetMapping("/predict")
