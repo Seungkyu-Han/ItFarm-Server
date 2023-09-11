@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,6 +53,7 @@ public class DeviceController {
             @Parameter(name = "humidity", description = "필드 습도", example = "71"),
             @Parameter(name = "ph", description = "ph", example = "5.5"),
             @Parameter(name = "ec", description = "전기전도도", example = "12"),
+            @Parameter(name = "led_height", description = "LED 높이", example = "12.3"),
             @Parameter(name = "time", description = "시간", example = "2023-09-07 17:10:06.728144")
     })
     @ApiResponses({
@@ -63,9 +65,10 @@ public class DeviceController {
             @RequestParam Float humidity,
             @RequestParam Float ph,
             @RequestParam Float ec,
+            @RequestParam Float led_height,
             @RequestParam Timestamp time
     ){
-        return deviceService.measurement(field_temperature, humidity, water_temperature, ph, ec, time);
+        return deviceService.measurement(field_temperature, humidity, water_temperature, ph, ec, led_height,time);
     }
 
     @GetMapping("/predict")

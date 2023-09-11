@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "measurement")
-@Data
+@Entity(name = "planting")
 @NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-public class MeasurementEntity {
+@AllArgsConstructor
+public class PlantingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +21,5 @@ public class MeasurementEntity {
     @JoinColumn(name = "time")
     private TimeEntity time;
 
-    private Float ph;
-
-    private Float ec;
-
-    private Float water_temperature;
-
-    private Float field_temperature;
-
-    private Float humidity;
-
-    private Float led_height;
-
+    private Integer since;
 }

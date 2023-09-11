@@ -55,6 +55,7 @@ public class DeviceServiceImpl implements DeviceService {
             Float water_temperature,
             Float ph,
             Float ec,
+            Float led_height,
             Timestamp time) {
 
         TimeEntity timeEntity = getTimeEntity(time);
@@ -65,6 +66,7 @@ public class DeviceServiceImpl implements DeviceService {
                 .water_temperature(water_temperature)
                 .ph(ph)
                 .ec(ec)
+                .led_height(led_height)
                 .time(timeEntity)
                 .build();
 
