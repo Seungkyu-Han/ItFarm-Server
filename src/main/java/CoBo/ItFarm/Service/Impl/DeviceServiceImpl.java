@@ -30,6 +30,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final PredictionRepository predictionRepository;
     private final TimeRepository timeRepository;
     private final WarningRepository warningRepository;
+    private final PlantingRepository plantingRepository;
     private final EmailService emailService;
     private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -87,6 +88,20 @@ public class DeviceServiceImpl implements DeviceService {
         applicationEventPublisher.publishEvent(new DeviceWarningRes(warningEntity));
 
         return null;
+    }
+
+    @Override
+    public ResponseEntity<HttpStatus> since(Integer day, Timestamp time) {
+
+        PlantingEntity plantingEntity = PlantingEntity.builder()
+                .time(getTimeEntity(time))
+                .since(day)
+                .build();
+
+        plantingRepository.save(plantingEntity);
+
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

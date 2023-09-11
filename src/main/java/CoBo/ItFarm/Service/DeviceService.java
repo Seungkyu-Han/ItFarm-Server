@@ -12,4 +12,5 @@ public interface DeviceService {
     ResponseEntity<HttpStatus> predict(Float prediction_ph, Float prediction_ec, Float prediction_water_temperature, Float prediction_field_temperature, Timestamp prediction_time);
     ResponseEntity<HttpStatus> report(WarningCategoryEnum warningCategoryEnum, Timestamp time);
 
+    ResponseEntity<HttpStatus> since(Integer day, Timestamp time);
 }

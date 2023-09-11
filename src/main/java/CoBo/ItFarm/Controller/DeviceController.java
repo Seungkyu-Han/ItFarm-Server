@@ -111,4 +111,19 @@ public class DeviceController {
             @RequestParam WarningCategoryEnum warningCategoryEnum, @RequestParam Timestamp time){
         return deviceService.report(warningCategoryEnum, time);
     }
+
+    @GetMapping("/since")
+    @Operation(
+            summary = "파종 후 경과일을 전송하는 API",
+            description = "00:00으로 Time을 주고 경과일을 Integer 타입으로 전송"
+    )
+    @Parameters({
+            @Parameter(name = "day", description = "경과일", example = "1")
+    })
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    public ResponseEntity<HttpStatus> since(@RequestParam Integer day, @RequestParam Timestamp time){
+        return deviceService.since(day, time);
+    }
 }
