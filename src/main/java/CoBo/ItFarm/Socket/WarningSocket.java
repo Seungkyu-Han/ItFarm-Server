@@ -1,16 +1,11 @@
 package CoBo.ItFarm.Socket;
 
-import CoBo.ItFarm.Config.Jwt.JwtTokenProvider;
-import CoBo.ItFarm.Data.Dto.Device.Res.DeviceLevelRes;
-import CoBo.ItFarm.Data.Dto.Socket.SocketTestRes;
-import CoBo.ItFarm.Data.Entity.LevelEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
+import CoBo.ItFarm.Data.Dto.Device.Res.DeviceWarningRes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpHeaders;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -18,13 +13,14 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
-public class SocketTest extends TextWebSocketHandler {
+@Slf4j
+public class WarningSocket extends TextWebSocketHandler {
+
     private final List<WebSocketSession> webSocketSessionList = new ArrayList<>();
 
     private final ObjectMapper objectMapper;
@@ -32,14 +28,14 @@ public class SocketTest extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         webSocketSessionList.add(session);
-        log.info(session + "클라이언트 접속");
+        log.info("클라이언트 접속 : {}", session);
     }
 
     @EventListener
-    public void sendData(DeviceLevelRes deviceLevelRes){
+    public void sendData(DeviceWarningRes deviceWarningRes){
         for(WebSocketSession webSocketSession : webSocketSessionList){
             try{
-                webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(deviceLevelRes)));
+                webSocketSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(deviceWarningRes)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -48,8 +44,7 @@ public class SocketTest extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        log.info(session + " 클라이언트 접속 해제");
-
         webSocketSessionList.remove(session);
+        log.info("클라이언트 접속 해제: {}", session);
     }
 }

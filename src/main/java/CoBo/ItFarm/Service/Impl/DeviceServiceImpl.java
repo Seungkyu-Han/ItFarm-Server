@@ -1,6 +1,9 @@
 package CoBo.ItFarm.Service.Impl;
 
 import CoBo.ItFarm.Data.Dto.Device.Res.DeviceLevelRes;
+import CoBo.ItFarm.Data.Dto.Device.Res.DeviceMeasurementRes;
+import CoBo.ItFarm.Data.Dto.Device.Res.DevicePredictionRes;
+import CoBo.ItFarm.Data.Dto.Device.Res.DeviceWarningRes;
 import CoBo.ItFarm.Data.Entity.*;
 import CoBo.ItFarm.Data.Enum.WarningCategoryEnum;
 import CoBo.ItFarm.Repository.*;
@@ -45,6 +48,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    @Async
     public ResponseEntity<HttpStatus> measurement(
             Float field_temperature,
             Float humidity,
@@ -65,21 +69,26 @@ public class DeviceServiceImpl implements DeviceService {
                 .build();
 
         measurementRepository.save(measurementEntity);
+        applicationEventPublisher.publishEvent(new DeviceMeasurementRes(measurementEntity));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
+    @Async
     public ResponseEntity<HttpStatus> report(WarningCategoryEnum warningCategoryEnum, Timestamp time) {
         WarningEntity warningEntity = new WarningEntity(getTimeEntity(time), warningCategoryEnum);
         warningRepository.save(warningEntity);
         if(warningCategoryEnum.isSendMail())
             emailService.sendWarningEmail(warningCategoryEnum.name());
 
+        applicationEventPublisher.publishEvent(new DeviceWarningRes(warningEntity));
+
         return null;
     }
 
     @Override
+    @Async
     public ResponseEntity<HttpStatus> predict(
             Float prediction_ph,
             Float prediction_ec,
@@ -98,6 +107,8 @@ public class DeviceServiceImpl implements DeviceService {
                 .build();
 
         predictionRepository.save(predictionEntity);
+
+        applicationEventPublisher.publishEvent(new DevicePredictionRes(predictionEntity));
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

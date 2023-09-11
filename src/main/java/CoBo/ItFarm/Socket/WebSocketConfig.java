@@ -11,10 +11,16 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final SocketTest socketTest;
+    private final LevelSocket levelSocket;
+    private final MeasurementSocket measurementSocket;
+    private final PredictionSocket predictionSocket;
+    private final WarningSocket warningSocket;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(socketTest, "/test").setAllowedOrigins("*");
+        registry.addHandler(levelSocket, "/no-auth/level").setAllowedOrigins("*")
+                .addHandler(measurementSocket, "/no-auth/measurement").setAllowedOrigins("*")
+                .addHandler(predictionSocket, "/no-auth/prediction").setAllowedOrigins("*")
+                .addHandler(warningSocket, "/auth/warning").setAllowedOrigins("*");
     }
 }
