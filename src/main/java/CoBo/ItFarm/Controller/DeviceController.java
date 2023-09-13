@@ -30,8 +30,13 @@ public class DeviceController {
 
     @GetMapping("/level")
     @Operation(
-            summary = "10초 마다 전송하는 데이터 API",
+            summary = "1분 마다 전송하는 데이터 API",
             description = "컨테이너 수위 그리고 시간")
+    @Parameters({
+            @Parameter(name = "first", description = "1번 컨테이너의 수위", example = "1.2"),
+            @Parameter(name = "second", description = "2번 컨테이너의 수위", example = "1.5"),
+            @Parameter(name = "time", description = "Timestamp",  example = "2023-09-14 00:44:43.528457")
+    })
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공")
     })
