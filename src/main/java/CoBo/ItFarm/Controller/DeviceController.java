@@ -63,16 +63,15 @@ public class DeviceController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "성공")
     })
-    public ResponseEntity<HttpStatus> Data1Hour(
-            @RequestParam Float field_temperature,
-            @RequestParam Float water_temperature,
-            @RequestParam Float humidity,
-            @RequestParam Float ph,
-            @RequestParam Float ec,
-            @RequestParam Float led_height,
-            @RequestParam Timestamp time
+    public ResponseEntity<HttpStatus> measurement(
+            @RequestParam(required = false) Float field_temperature,
+            @RequestParam(required = false) Float water_temperature,
+            @RequestParam(required = false) Float ph,
+            @RequestParam(required = false) Float ec,
+            @RequestParam(required = false) Float led_height,
+            @RequestParam(required = false) Timestamp time
     ){
-        return deviceService.measurement(field_temperature, humidity, water_temperature, ph, ec, led_height,time);
+        return deviceService.measurement(field_temperature, water_temperature, ph, ec, led_height,time);
     }
 
     @GetMapping("/predict")

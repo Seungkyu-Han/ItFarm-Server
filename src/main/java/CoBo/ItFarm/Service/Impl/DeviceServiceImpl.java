@@ -52,7 +52,6 @@ public class DeviceServiceImpl implements DeviceService {
     @Async
     public ResponseEntity<HttpStatus> measurement(
             Float field_temperature,
-            Float humidity,
             Float water_temperature,
             Float ph,
             Float ec,
@@ -63,7 +62,6 @@ public class DeviceServiceImpl implements DeviceService {
 
         MeasurementEntity measurementEntity = MeasurementEntity.builder()
                 .field_temperature(field_temperature)
-                .humidity(humidity)
                 .water_temperature(water_temperature)
                 .ph(ph)
                 .ec(ec)
